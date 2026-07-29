@@ -3,172 +3,381 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Dora Fanclub Việt Nam</title>
-    <!-- Favicon -->
-    <link rel="icon" href="https://i.postimg.cc/Z57X57Gp/Chua-co-ten-(Logo)-(1).png" type="image/png">
-    <!-- FontAwesome Icon -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- File Style CSS -->
-    <link rel="stylesheet" href="style.css">
+    <title>Dora Admin 2.0</title>
+    <style>
+        /* CSS GIAO DIỆN HỆ THỐNG */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f6f9; color: #333; display: flex; min-height: 100vh; }
+
+        /* Sidebar & Layout */
+        .dashboard { display: flex; width: 100%; }
+        .sidebar { width: 260px; background: #1e293b; color: #fff; padding: 20px; display: flex; flex-direction: column; min-height: 100vh; transition: 0.3s; }
+        .brand { text-align: center; padding-bottom: 20px; border-bottom: 1px solid #334155; margin-bottom: 20px; }
+        .brand img { width: 60px; height: 60px; border-radius: 50%; }
+        .brand h3 { margin-top: 10px; font-size: 18px; color: #38bdf8; }
+        .brand span { font-size: 12px; color: #94a3b8; }
+        .sidebar nav { flex: 1; }
+        .sidebar nav a { display: block; padding: 12px 15px; color: #cbd5e1; text-decoration: none; border-radius: 8px; margin-bottom: 5px; font-size: 14px; transition: 0.2s; }
+        .sidebar nav a:hover, .sidebar nav a.active { background: #0284c7; color: #fff; }
+        .user-info { padding-top: 15px; border-top: 1px solid #334155; font-size: 13px; }
+        .user-info .name { font-weight: bold; color: #f8fafc; }
+        .user-info .role { color: #38bdf8; margin-bottom: 10px; }
+        .user-info button { width: 100%; padding: 8px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; }
+
+        /* Main Content */
+        .main-content { flex: 1; padding: 30px; overflow-y: auto; }
+        .page-header { margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+        .card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 20px; }
+
+        /* Form & Component Styling */
+        input, select, textarea, button { font-size: 14px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; margin-bottom: 10px; width: 100%; }
+        button.btn-primary { background: #0284c7; color: white; border: none; cursor: pointer; font-weight: bold; }
+        button.btn-primary:hover { background: #0369a1; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+        th { background-color: #f8fafc; }
+        
+        /* Mobile Menu */
+        .menu-toggle { display: none; position: fixed; top: 15px; right: 15px; z-index: 1000; background: #0284c7; color: white; border: none; padding: 10px 15px; border-radius: 6px; }
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 998; }
+
+        @media (max-width: 768px) {
+            .sidebar { position: fixed; left: -260px; z-index: 999; height: 100%; }
+            .sidebar.open { left: 0; }
+            .menu-toggle { display: block; }
+            .sidebar-overlay.open { display: block; }
+        }
+    </style>
 </head>
 <body>
 
-    <!-- ================= 1. GIAO DIỆN ĐĂNG NHẬP ================= -->
-    <div id="loginSection" class="login-wrapper">
-        <div class="login-card">
-            <div class="login-header">
-                <!-- Logo đã fix kích thước -->
-                <img src="https://i.postimg.cc/Z57X57Gp/Chua-co-ten-(Logo)-(1).png" alt="Logo Dora Fanclub" class="login-logo">
-                <h2>Admin Login</h2>
-                <p>Hệ thống Quản trị Dora Fanclub Việt Nam</p>
-            </div>
+<button class="menu-toggle" onclick="window.toggleMenu()">☰</button>
+<div class="sidebar-overlay" onclick="window.toggleMenu()"></div>
 
-            <div id="errorMessage" class="alert-error hidden">
-                <i class="fa-solid fa-circle-exclamation"></i>
-                <span id="errorText">Tên đăng nhập hoặc mật khẩu không đúng!</span>
-            </div>
-
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="username">Email Admin</label>
-                    <div class="input-icon-wrapper">
-                        <i class="fa-solid fa-envelope"></i>
-                        <input type="email" id="username" class="form-control" placeholder="admin@dorafanclub.com" required autocomplete="off">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Mật khẩu</label>
-                    <div class="input-icon-wrapper">
-                        <i class="fa-solid fa-lock"></i>
-                        <input type="password" id="password" class="form-control" placeholder="••••••••" required>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-primary">
-                    Đăng nhập <i class="fa-solid fa-arrow-right-to-bracket" style="margin-left: 8px;"></i>
-                </button>
-            </form>
-
-            <div class="security-note">
-                <i class="fa-solid fa-shield-halved"></i> Xác thực qua Firebase Authentication & SSL
-            </div>
+<div class="dashboard">
+    <aside class="sidebar" id="sidebar">
+        <div class="brand">
+            <img src="https://i.postimg.cc/Z57X57Gp/Chua-co-ten-(Logo)-(1).png" alt="Logo" />
+            <h3>DORA ADMIN</h3>
+            <span>Hệ thống quản trị</span>
         </div>
-    </div>
+        <nav>
+            <a href="#" data-page="home" class="active" onclick="window.showPage('home')">🏠 Trang chủ</a>
+            <a href="#" data-page="users" onclick="window.showPage('users')">👥 Thành viên</a>
+            <a href="#" data-page="notices" onclick="window.showPage('notices')">📢 Thông báo</a>
+            <a href="#" data-page="documents" onclick="window.showPage('documents')">📄 Văn bản</a>
+            <a href="#" data-page="tests" onclick="window.showPage('tests')">📝 Test kỹ năng</a>
+            <a href="#" data-page="feedback" onclick="window.showPage('feedback')">💬 Góp ý</a>
+            <a href="#" data-page="games" onclick="window.showPage('games')">🎮 Game</a>
+            <a href="#" data-page="settings" onclick="window.showPage('settings')">⚙️ Cài đặt</a>
+            <a href="#" data-page="profile" onclick="window.showPage('profile')">👤 Hồ sơ</a>
+        </nav>
+        <div class="user-info">
+            <div class="name" id="userName">...</div>
+            <div class="role" id="userRole">...</div>
+            <button onclick="window.logout()">🚪 Đăng xuất</button>
+        </div>
+    </aside>
 
-    <!-- ================= 2. GIAO DIỆN ADMIN DASHBOARD ================= -->
-    <div id="dashboardSection" class="dashboard-container hidden">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar">
-            <div class="sidebar-brand">
-                <img src="https://i.postimg.cc/Z57X57Gp/Chua-co-ten-(Logo)-(1).png" alt="Logo Sidebar" class="sidebar-logo">
-                <span>DORA FC ADMIN</span>
-            </div>
-            <ul class="sidebar-menu">
-                <li class="active"><a href="#"><i class="fa-solid fa-chart-pie"></i> Tổng quan</a></li>
-                <li><a href="#"><i class="fa-solid fa-users"></i> Thành viên FC</a></li>
-                <li><a href="#"><i class="fa-solid fa-calendar-days"></i> Sự kiện & Offline</a></li>
-                <li><a href="#"><i class="fa-solid fa-newspaper"></i> Bài viết & Tin tức</a></li>
-                <li><a href="#"><i class="fa-solid fa-hand-holding-dollar"></i> Quỹ & Đóng góp</a></li>
-                <li><a href="#"><i class="fa-solid fa-gear"></i> Cài đặt trang</a></li>
-            </ul>
-        </aside>
+    <main class="main-content">
+        <div class="page-header">
+            <h2 id="pageTitle">Trang chủ</h2>
+        </div>
+        <div id="pageContent"></div>
+    </main>
+</div>
 
-        <!-- Main Workspace -->
-        <main class="main-content">
-            <!-- Header -->
-            <header class="top-header">
-                <h2>Bảng Điều Khiển Fanclub</h2>
-                <div class="user-profile">
-                    <div class="avatar" id="avatarText">A</div>
-                    <span id="userDisplayName" style="font-weight: 600;">Admin</span>
-                    <button class="btn-logout" id="btnLogout">
-                        <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
-                    </button>
-                </div>
-            </header>
+<!-- SDK FIREBASE MODULE -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, set, get, push, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-            <!-- Body Content -->
-            <div class="content-body">
-                <!-- Stat Cards cho Fanclub -->
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
-                        <div class="stat-info">
-                            <h3 id="statMembers">12,850</h3>
-                            <p>Tổng thành viên FC</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon icon-success">
-                            <i class="fa-solid fa-calendar-check"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3 id="statEvents">156</h3>
-                            <p>Đăng ký Offline sắp tới</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon icon-warning">
-                            <i class="fa-solid fa-hand-holding-heart"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3 id="statFund">15,200,000đ</h3>
-                            <p>Quỹ hoạt động tháng</p>
-                        </div>
-                    </div>
-                </div>
+    // Cấu hình Firebase Realtime Database
+    const firebaseConfig = {
+        databaseURL: "https://dora-admin-default-rtdb.firebaseio.com" // Thay đổi bằng URL Firebase của bạn
+    };
 
-                <!-- Table Section: Thành viên / Đăng ký mới -->
-                <div class="table-container">
-                    <h3>Thành viên đăng ký Offline Sinh nhật Doraemon</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Mã ĐK</th>
-                                <th>Tên thành viên</th>
-                                <th>Số điện thoại / Email</th>
-                                <th>Ngày đăng ký</th>
-                                <th>Trạng thái Vé</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>#OFF-001</td>
-                                <td>Nguyễn Minh Anh</td>
-                                <td>minhanh@gmail.com</td>
-                                <td>29/07/2026</td>
-                                <td><span class="badge badge-success">Đã xác nhận</span></td>
-                            </tr>
-                            <tr>
-                                <td>#OFF-002</td>
-                                <td>Trần Hoàng Long</td>
-                                <td>0908123xxx</td>
-                                <td>29/07/2026</td>
-                                <td><span class="badge badge-warning">Chờ duyệt</span></td>
-                            </tr>
-                            <tr>
-                                <td>#OFF-003</td>
-                                <td>Lê Khánh Hà</td>
-                                <td>khanhha@gmail.com</td>
-                                <td>28/07/2026</td>
-                                <td><span class="badge badge-success">Đã xác nhận</span></td>
-                            </tr>
-                            <tr>
-                                <td>#OFF-004</td>
-                                <td>Phạm Quốc Bảo</td>
-                                <td>0912987xxx</td>
-                                <td>28/07/2026</td>
-                                <td><span class="badge badge-success">Đã xác nhận</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </main>
-    </div>
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-    <!-- Import Script JS dưới dạng ES Module để tích hợp Firebase SDK -->
-    <script type="module" src="script.js"></script>
+    // Mặc định khởi tạo giả lập user nếu chưa đăng nhập để test UI
+    if (!localStorage.getItem("currentUser")) {
+        localStorage.setItem("currentUser", JSON.stringify({
+            id: "BQT001",
+            name: "Quản Trị Viên",
+            role: "Ban Quản Trị"
+        }));
+    }
+
+    // AUTH HELPER
+    function checkAuth() {
+        const user = JSON.parse(localStorage.getItem("currentUser"));
+        if (!user) {
+            alert("Vui lòng đăng nhập!");
+            return null;
+        }
+        return user;
+    }
+
+    // MOBILE MENU TOGGLE
+    window.toggleMenu = function() {
+        document.getElementById("sidebar").classList.toggle("open");
+        document.querySelector(".sidebar-overlay").classList.toggle("open");
+    };
+
+    // LOGOUT
+    window.logout = function() {
+        localStorage.removeItem("currentUser");
+        alert("Đã đăng xuất!");
+        location.reload();
+    };
+
+    // ROUTER SYSTEM
+    window.showPage = function(pageId) {
+        const user = checkAuth();
+        if (!user) return;
+
+        if (pageId === "settings" && user.role !== "Ban Quản Trị") {
+            alert("⛔ Bạn không có quyền truy cập Cài đặt!");
+            return;
+        }
+
+        document.querySelectorAll(".sidebar nav a").forEach(el => el.classList.remove("active"));
+        const menu = document.querySelector(`.sidebar nav a[data-page="${pageId}"]`);
+        if (menu) menu.classList.add("active");
+
+        const content = document.getElementById("pageContent");
+        document.getElementById("pageTitle").innerText = menu ? menu.innerText : "Dashboard";
+        if (!content) return;
+
+        switch(pageId) {
+            case "home": content.innerHTML = getHomePage(); break;
+            case "users": content.innerHTML = getUsersPage(user); break;
+            case "notices": content.innerHTML = getNoticesPage(user); break;
+            case "documents": content.innerHTML = getDocumentsPage(user); break;
+            case "tests": content.innerHTML = getTestsPage(user); break;
+            case "feedback": content.innerHTML = getFeedbackPage(user); break;
+            case "games": content.innerHTML = getGamesPage(user); setTimeout(initGameCanvas, 100); break;
+            case "settings": content.innerHTML = getSettingsPage(user); break;
+            case "profile": content.innerHTML = getProfilePage(user); break;
+        }
+    };
+
+    // VIEW TEMPLATES
+    function getHomePage() {
+        return `<div class="card"><h3>Chào mừng đến với Dora Admin 2.0</h3><p>Hệ thống quản trị nội bộ hỗ trợ quản lý nhân sự, công văn và đánh giá kỹ năng.</p></div>`;
+    }
+
+    function getUsersPage(user) {
+        return `
+            ${user.role === 'Ban Quản Trị' ? `
+            <div class="card">
+                <h3>Thêm thành viên mới</h3>
+                <input type="text" id="u_id" placeholder="Mã nhân viên (VD: NV001)">
+                <input type="text" id="u_name" placeholder="Họ và tên">
+                <select id="u_role">
+                    <option value="Member">Member</option>
+                    <option value="Ban Quản Trị">Ban Quản Trị</option>
+                </select>
+                <button class="btn-primary" onclick="window.addUser()">Thêm tài khoản</button>
+            </div>` : ''}
+            <div class="card">
+                <h3>Danh sách thành viên</h3>
+                <p><i>Chức năng danh sách được đồng bộ từ Firebase DB.</i></p>
+            </div>`;
+    }
+
+    function getNoticesPage() {
+        return `<div class="card"><h3>Thông báo nội bộ</h3><textarea placeholder="Nhập nội dung thông báo..."></textarea><button class="btn-primary">Đăng thông báo</button></div>`;
+    }
+
+    function getDocumentsPage() {
+        return `<div class="card"><h3>Quản lý văn bản</h3><input type="text" placeholder="Tìm kiếm văn bản..."><button class="btn-primary">Tìm kiếm</button></div>`;
+    }
+
+    function getTestsPage() {
+        return `
+            <div class="card">
+                <h3>Tạo bài Test mới</h3>
+                <textarea id="rawQuestions" rows="5" placeholder="Nhập danh sách câu hỏi:&#10;Câu 1: Thủ đô Việt Nam là gì?&#10;a. Đà Nẵng&#10;b. *Hà Nội&#10;c. HCM"></textarea>
+                <button class="btn-primary" onclick="window.processTest()">Phân tích câu hỏi</button>
+            </div>`;
+    }
+
+    function getFeedbackPage() {
+        return `<div class="card"><h3>Gửi góp ý / Báo lỗi</h3><textarea placeholder="Mô tả ý kiến hoặc lỗi gặp phải..."></textarea><button class="btn-primary">Gửi phản hồi</button></div>`;
+    }
+
+    function getGamesPage() {
+        return `
+            <div class="card" style="text-align: center;">
+                <h3>🎮 Doraemon Run</h3>
+                <canvas id="gameCanvas" width="600" height="200" style="border:2px solid #333; background: #fff; max-width: 100%;"></canvas>
+                <p>Nhấn <b>Space</b> hoặc <b>Click chuột</b> để nhảy vượt chướng ngại vật</p>
+                <button class="btn-primary" style="width: auto; padding: 10px 30px;" onclick="window.startGame()">Chơi ngay</button>
+            </div>`;
+    }
+
+    function getSettingsPage() {
+        return `
+            <div class="card">
+                <h3>Cài đặt & Sao lưu hệ thống</h3>
+                <button class="btn-primary" onclick="window.backupData()">📥 Backup dữ liệu JSON</button>
+            </div>`;
+    }
+
+    function getProfilePage(user) {
+        return `<div class="card"><h3>Hồ sơ cá nhân</h3><p><b>Mã:</b> ${user.id}</p><p><b>Họ tên:</b> ${user.name}</p><p><b>Chức vụ:</b> ${user.role}</p></div>`;
+    }
+
+    // 1. QUESTION PARSER LOGIC
+    window.processTest = function() {
+        const text = document.getElementById("rawQuestions").value;
+        if(!text) return alert("Vui lòng nhập văn bản!");
+        const questions = parseQuestions(text);
+        alert(`Đã phân tích thành công ${questions.length} câu hỏi! Check console log.`);
+        console.log(questions);
+    };
+
+    function parseQuestions(text) {
+        const lines = text.split('\n');
+        const questions = [];
+        let currentQ = null;
+        let currentOpts = [];
+        
+        for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed) continue;
+            
+            const qMatch = trimmed.match(/^(Câu\s*)?(\d+)[:\.]\s*(.*)/i);
+            if (qMatch) {
+                if (currentQ && currentOpts.length > 0) {
+                    questions.push({ question: currentQ, options: currentOpts });
+                }
+                currentQ = qMatch[3] || trimmed;
+                currentOpts = [];
+            } else {
+                const oMatch = trimmed.match(/^([a-dA-D])[\.\)]\s*(.*)/i);
+                if (oMatch && currentQ !== null) {
+                    let opt = oMatch[1].toLowerCase() + '. ' + oMatch[2];
+                    if (oMatch[2].trim().startsWith('*')) {
+                        opt = '*' + opt;
+                    }
+                    currentOpts.push(opt);
+                }
+            }
+        }
+        if (currentQ && currentOpts.length > 0) {
+            questions.push({ question: currentQ, options: currentOpts });
+        }
+        return questions;
+    }
+
+    // 2. BACKUP DATABASE FUNCTION
+    window.backupData = async function() {
+        try {
+            const snap = await get(ref(db));
+            if (!snap.exists()) return alert("Không có dữ liệu để backup!");
+            
+            const a = document.createElement("a");
+            a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(snap.val(), null, 4));
+            a.download = "backup_" + new Date().toISOString().slice(0, 10) + ".json";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        } catch (e) { 
+            console.error(e); 
+            alert("⚠️ Lỗi backup!"); 
+        }
+    };
+
+    // 3. CANVAS GAME LOGIC
+    let gameRunning = false;
+    let doraY = 140, velocity = 0, gravity = 1.2;
+    let obstacleX = 600;
+
+    function initGameCanvas() {
+        const canvas = document.getElementById("gameCanvas");
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawDoraemon(ctx, 50, doraY, 30, 30);
+    }
+
+    window.startGame = function() {
+        gameRunning = true;
+        doraY = 140;
+        obstacleX = 600;
+        gameLoop();
+    };
+
+    window.jumpGame = function() {
+        if (doraY >= 140) velocity = -15;
+    };
+
+    function gameLoop() {
+        if (!gameRunning) return;
+        const canvas = document.getElementById("gameCanvas");
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+
+        // Physics
+        velocity += gravity;
+        doraY += velocity;
+        if (doraY > 140) { doraY = 140; velocity = 0; }
+
+        obstacleX -= 6;
+        if (obstacleX < -20) obstacleX = 600;
+
+        // Collision Check
+        if (obstacleX > 50 && obstacleX < 80 && doraY > 120) {
+            alert("💥 Game Over!");
+            gameRunning = false;
+            return;
+        }
+
+        // Render
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawDoraemon(ctx, 50, doraY, 30, 30);
+        
+        // Draw Obstacle
+        ctx.fillStyle = "#ef4444";
+        ctx.fillRect(obstacleX, 150, 20, 20);
+
+        requestAnimationFrame(gameLoop);
+    }
+
+    function drawDoraemon(ctx, x, y, w, h) {
+        ctx.fillStyle = '#2196F3';
+        ctx.beginPath(); ctx.arc(x + w/2, y + h/2 - 5, w/2, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath(); ctx.arc(x + w/2, y + h/2 + 5, w/3, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#FF1744';
+        ctx.beginPath(); ctx.arc(x + w/2 - 2, y + 14, 3, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#FFD700';
+        ctx.beginPath(); ctx.arc(x + w/2, y + h - 2, 6, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // Keydown Controls (Safe from input elements)
+    document.addEventListener('keydown', function(e) {
+        const tag = e.target.tagName.toLowerCase();
+        if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+
+        if (e.key === ' ' || e.key === 'Space') {
+            e.preventDefault();
+            if (!gameRunning) window.startGame();
+            else window.jumpGame();
+        }
+    });
+
+    // INIT INITIAL STATE
+    const currentUser = checkAuth();
+    if (currentUser) {
+        document.getElementById("userName").innerText = currentUser.name;
+        document.getElementById("userRole").innerText = currentUser.role;
+        window.showPage("home");
+    }
+</script>
+
 </body>
 </html>
