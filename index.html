@@ -3,148 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dora Admin 2.0</title>
+    <title>Đăng nhập - Dora Admin</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f4f6f9; color: #333; display: flex; min-height: 100vh; }
-
-        .dashboard { display: flex; width: 100%; }
-        .sidebar { width: 260px; background: #1e293b; color: #fff; padding: 20px; display: flex; flex-direction: column; min-height: 100vh; transition: 0.3s; }
-        .brand { text-align: center; padding-bottom: 20px; border-bottom: 1px solid #334155; margin-bottom: 20px; }
-        .brand img { width: 60px; height: 60px; border-radius: 50%; }
-        .brand h3 { margin-top: 10px; font-size: 18px; color: #38bdf8; }
-        .brand span { font-size: 12px; color: #94a3b8; }
-        .sidebar nav { flex: 1; }
-        .sidebar nav a { display: block; padding: 12px 15px; color: #cbd5e1; text-decoration: none; border-radius: 8px; margin-bottom: 5px; font-size: 14px; transition: 0.2s; }
-        .sidebar nav a:hover, .sidebar nav a.active { background: #0284c7; color: #fff; }
-        .user-info { padding-top: 15px; border-top: 1px solid #334155; font-size: 13px; }
-        .user-info .name { font-weight: bold; color: #f8fafc; }
-        .user-info .role { color: #38bdf8; margin-bottom: 10px; }
-        .user-info button { width: 100%; padding: 8px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; }
-
-        .main-content { flex: 1; padding: 30px; overflow-y: auto; }
-        .page-header { margin-bottom: 25px; }
-        .card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 20px; }
-
-        input, select, textarea, button { font-size: 14px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; margin-bottom: 10px; width: 100%; }
-        button.btn-primary { background: #0284c7; color: white; border: none; cursor: pointer; font-weight: bold; }
-        
-        .menu-toggle { display: none; position: fixed; top: 15px; right: 15px; z-index: 1000; background: #0284c7; color: white; border: none; padding: 10px 15px; border-radius: 6px; }
-        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 998; }
-
-        @media (max-width: 768px) {
-            .sidebar { position: fixed; left: -260px; z-index: 999; height: 100%; }
-            .sidebar.open { left: 0; }
-            .menu-toggle { display: block; }
-            .sidebar-overlay.open { display: block; }
-        }
+        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #1e293b; color: #333; }
+        .login-card { background: #fff; padding: 30px; border-radius: 12px; width: 100%; max-width: 380px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center; }
+        .login-card img { width: 70px; margin-bottom: 15px; }
+        .login-card h2 { color: #0284c7; margin-bottom: 20px; font-size: 22px; }
+        input { font-size: 14px; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; margin-bottom: 12px; width: 100%; outline: none; }
+        button { font-size: 14px; padding: 12px; background: #0284c7; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
+        button:hover { background: #0369a1; }
     </style>
 </head>
 <body>
 
-<button class="menu-toggle" onclick="window.toggleMenu()">☰</button>
-<div class="sidebar-overlay" onclick="window.toggleMenu()"></div>
-
-<div class="dashboard">
-    <aside class="sidebar" id="sidebar">
-        <div class="brand">
-            <img src="https://i.postimg.cc/Z57X57Gp/Chua-co-ten-(Logo)-(1).png" alt="Logo" />
-            <h3>DORA ADMIN</h3>
-            <span>Hệ thống quản trị</span>
-        </div>
-        <nav>
-            <a href="#" data-page="home" class="active" onclick="window.showPage('home')">🏠 Trang chủ</a>
-            <a href="#" data-page="users" onclick="window.showPage('users')">👥 Thành viên</a>
-            <a href="#" data-page="notices" onclick="window.showPage('notices')">📢 Thông báo</a>
-            <a href="#" data-page="documents" onclick="window.showPage('documents')">📄 Văn bản</a>
-            <a href="#" data-page="tests" onclick="window.showPage('tests')">📝 Test kỹ năng</a>
-            <a href="#" data-page="feedback" onclick="window.showPage('feedback')">💬 Góp ý</a>
-            <a href="#" data-page="games" onclick="window.showPage('games')">🎮 Game</a>
-            <a href="#" data-page="settings" onclick="window.showPage('settings')">⚙️ Cài đặt</a>
-            <a href="#" data-page="profile" onclick="window.showPage('profile')">👤 Hồ sơ</a>
-        </nav>
-        <div class="user-info">
-            <div class="name" id="userName">...</div>
-            <div class="role" id="userRole">...</div>
-            <button onclick="window.logout()">🚪 Đăng xuất</button>
-        </div>
-    </aside>
-
-    <main class="main-content">
-        <div class="page-header">
-            <h2 id="pageTitle">Trang chủ</h2>
-        </div>
-        <div id="pageContent"></div>
-    </main>
+<div class="login-card">
+    <img src="https://i.postimg.cc/Z57X57Gp/Chua-co-ten-(Logo)-(1).png" alt="Logo">
+    <h2>Dora Admin Login</h2>
+    <input type="text" id="loginId" placeholder="Mã tài khoản (VD: BQT001 hoặc NV001)">
+    <input type="password" id="loginPass" placeholder="Mật khẩu">
+    <button onclick="login()">Đăng nhập</button>
 </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-    const firebaseConfig = {
-        databaseURL: "https://dora-admin-default-rtdb.firebaseio.com"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    // KIỂM TRA ĐĂNG NHẬP (Chuyển hẳn về index.html nếu chưa đăng nhập)
-    function checkAuth() {
-        const user = JSON.parse(localStorage.getItem("currentUser"));
-        if (!user) {
-            window.location.href = "index.html";
-            return null;
-        }
-        return user;
+<script>
+    // Nếu đã đăng nhập trước đó thì vào thẳng admin.html
+    if (localStorage.getItem("currentUser")) {
+        window.location.href = "admin.html";
     }
 
-    // CHỨC NĂNG ĐĂNG XUẤT NGUYÊN BẢN VÀ CHUẨN XÁC
-    window.logout = function() {
-        localStorage.removeItem("currentUser");
-        window.location.href = "index.html"; // Chuyển thẳng tới trang đăng nhập
-    };
+    function login() {
+        const id = document.getElementById("loginId").value.trim();
+        const pass = document.getElementById("loginPass").value.trim();
 
-    window.toggleMenu = function() {
-        document.getElementById("sidebar").classList.toggle("open");
-        document.querySelector(".sidebar-overlay").classList.toggle("open");
-    };
+        if (!id) return alert("Vui lòng nhập Mã tài khoản!");
 
-    window.showPage = function(pageId) {
-        const user = checkAuth();
-        if (!user) return;
-
-        if (pageId === "settings" && user.role !== "Ban Quản Trị") {
-            alert("⛔ Bạn không có quyền truy cập Cài đặt!");
-            return;
+        // Phân quyền theo mã
+        let user;
+        if (id.startsWith("BQT")) {
+            user = { id: id, name: "Ban Quản Trị (" + id + ")", role: "Ban Quản Trị" };
+        } else {
+            user = { id: id, name: "Thành viên (" + id + ")", role: "Member" };
         }
 
-        document.querySelectorAll(".sidebar nav a").forEach(el => el.classList.remove("active"));
-        const menu = document.querySelector(`.sidebar nav a[data-page="${pageId}"]`);
-        if (menu) menu.classList.add("active");
-
-        const content = document.getElementById("pageContent");
-        document.getElementById("pageTitle").innerText = menu ? menu.innerText : "Dashboard";
-
-        switch(pageId) {
-            case "home": content.innerHTML = `<div class="card"><h3>Chào mừng ${user.name}</h3></div>`; break;
-            case "users": content.innerHTML = `<div class="card"><h3>Quản lý Thành viên</h3></div>`; break;
-            case "notices": content.innerHTML = `<div class="card"><h3>Thông báo nội bộ</h3></div>`; break;
-            case "documents": content.innerHTML = `<div class="card"><h3>Văn bản</h3></div>`; break;
-            case "tests": content.innerHTML = `<div class="card"><h3>Test Kỹ Năng</h3></div>`; break;
-            case "feedback": content.innerHTML = `<div class="card"><h3>Góp ý</h3></div>`; break;
-            case "games": content.innerHTML = `<div class="card"><h3>Game Doraemon Run</h3></div>`; break;
-            case "settings": content.innerHTML = `<div class="card"><h3>Cài đặt</h3></div>`; break;
-            case "profile": content.innerHTML = `<div class="card"><h3>Hồ sơ cá nhân</h3></div>`; break;
-        }
-    };
-
-    // Khởi tạo trang
-    const currentUser = checkAuth();
-    if (currentUser) {
-        document.getElementById("userName").innerText = currentUser.name;
-        document.getElementById("userRole").innerText = currentUser.role;
-        window.showPage("home");
+        // Lưu thông tin và chuyển sang trang admin
+        localStorage.setItem("currentUser", JSON.stringify(user));
+        window.location.href = "admin.html";
     }
 </script>
 
