@@ -1,8 +1,5 @@
 <script type="module">
-    // 1. Import 2 module của Giai đoạn 2
-    import { renderUsersPage } from './js/users.js';
-    import { renderNoticesPage } from './js/notices.js';
-
+    // Kiểm tra Đăng nhập
     function checkAuth() {
         const user = JSON.parse(localStorage.getItem("currentUser"));
         if (!user) {
@@ -18,10 +15,11 @@
     };
 
     window.toggleMenu = function() {
-        document.getElementById("sidebar").classList.toggle("open");
-        document.querySelector(".sidebar-overlay").classList.toggle("open");
+        document.getElementById("sidebar")?.classList.toggle("open");
+        document.querySelector(".sidebar-overlay")?.classList.toggle("open");
     };
 
+    // Hàm điều hướng Router có bắt lỗi (Catch Error)
     window.showPage = async function(pageId) {
         const user = checkAuth();
         if (!user) return;
@@ -38,26 +36,37 @@
         const content = document.getElementById("pageContent");
         document.getElementById("pageTitle").innerText = menu ? menu.innerText : "Dashboard";
 
-        // 2. Gọi hàm render tương ứng
-        switch(pageId) {
-            case "home":
-                content.innerHTML = `<div class="card"><h3>👋 Xin chào, ${user.name}!</h3><p>Hệ thống Dora Admin 2.0.</p></div>`;
-                break;
+        try {
+            switch(pageId) {
+                case "home":
+                    content.innerHTML = `<div class="card"><h3>👋 Xin chào, ${user.name}!</h3><p>Hệ thống Dora Admin 2.0 đã sẵn sàng.</p></div>`;
+                    break;
 
-            case "users":
-                content.innerHTML = renderUsersPage(user);
-                break;
+                case "users":
+                    const { renderUsersPage } = await import('./js/users.js');
+                    content.innerHTML = renderUsersPage(user);
+                    break;
 
-            case "notices":
-                content.innerHTML = renderNoticesPage(user);
-                break;
+                case "notices":
+                    const { renderNoticesPage } = await import('./js/notices.js');
+                    content.innerHTML = renderNoticesPage(user);
+                    break;
 
-            default:
-                content.innerHTML = `<div class="card"><h3>📌 Trang ${pageId}</h3><p>Đang chuẩn bị ở các giai đoạn sau...</p></div>`;
-                break;
+                default:
+                    content.innerHTML = `<div class="card"><h3>📌 Trang ${pageId}</h3><p>Đang chuẩn bị ở các giai đoạn sau...</p></div>`;
+                    break;
+            }
+        } catch (error) {
+            console.error("Lỗi nạp Module:", error);
+            content.innerHTML = `
+                <div class="card" style="border-left: 4px solid #ef4444;">
+                    <h3 style="color: #ef4444;">⚠️ Không thể tải dữ liệu trang này</h3>
+                    <p><b>Lý do:</b> Hãy đảm bảo bạn đã tạo file <code>js/${pageId}.js</code> hoặc đang chạy ứng dụng qua Server (Live Server / GitHub Pages) thay vì mở trực tiếp file html.</p>
+                </div>`;
         }
     };
 
+    // Khởi tạo hệ thống
     const currentUser = checkAuth();
     if (currentUser) {
         document.getElementById("userName").innerText = currentUser.name;
