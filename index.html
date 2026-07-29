@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ thống Quản lý Admin</title>
-    <!-- Favicon / Icon tab trình duyệt -->
+    <title>Admin Panel - Dora Fanclub Việt Nam</title>
+    <!-- Favicon -->
     <link rel="icon" href="https://i.postimg.cc/Z57X57Gp/Chua-co-ten-(Logo)-(1).png" type="image/png">
     <!-- FontAwesome Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -17,10 +17,9 @@
     <div id="loginSection" class="login-wrapper">
         <div class="login-card">
             <div class="login-header">
-                <!-- Thêm Logo vào Form Đăng nhập -->
-                <img src="https://i.postimg.cc/Z57X57Gp/Chua-co-ten-(Logo)-(1).png" alt="Admin Logo" class="login-logo">
+                <img src="https://i.postimg.cc/Z57X57Gp/Chua-co-ten-(Logo)-(1).png" alt="Logo Dora Fanclub" class="login-logo">
                 <h2>Admin Login</h2>
-                <p>Nhập thông tin quản trị viên để tiếp tục</p>
+                <p>Hệ thống Quản trị Dora Fanclub Việt Nam</p>
             </div>
 
             <div id="errorMessage" class="alert-error hidden">
@@ -51,7 +50,7 @@
             </form>
 
             <div class="security-note">
-                <i class="fa-solid fa-shield-halved"></i> Hệ thống được bảo vệ bằng SSL & Session Timeout.
+                <i class="fa-solid fa-shield-halved"></i> Bảo mật Session Token & Auto Timeout
             </div>
         </div>
     </div>
@@ -61,15 +60,16 @@
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
             <div class="sidebar-brand">
-                <!-- Thêm Logo vào Sidebar -->
-                <img src="https://i.postimg.cc/Z57X57Gp/Chua-co-ten-(Logo)-(1).png" alt="Logo" class="sidebar-logo">
-                <span>ADMIN PANEL</span>
+                <img src="https://i.postimg.cc/Z57X57Gp/Chua-co-ten-(Logo)-(1).png" alt="Logo Sidebar" class="sidebar-logo">
+                <span>DORA FC ADMIN</span>
             </div>
             <ul class="sidebar-menu">
-                <li class="active"><a href="#"><i class="fa-solid fa-chart-line"></i> Tổng quan</a></li>
-                <li><a href="#"><i class="fa-solid fa-users"></i> Quản lý người dùng</a></li>
-                <li><a href="#"><i class="fa-solid fa-box"></i> Sản phẩm</a></li>
-                <li><a href="#"><i class="fa-solid fa-gear"></i> Cài đặt hệ thống</a></li>
+                <li class="active"><a href="#"><i class="fa-solid fa-chart-pie"></i> Tổng quan</a></li>
+                <li><a href="#"><i class="fa-solid fa-users"></i> Thành viên FC</a></li>
+                <li><a href="#"><i class="fa-solid fa-calendar-days"></i> Sự kiện & Offline</a></li>
+                <li><a href="#"><i class="fa-solid fa-newspaper"></i> Bài viết & Tin tức</a></li>
+                <li><a href="#"><i class="fa-solid fa-hand-holding-dollar"></i> Quỹ & Đóng góp</a></li>
+                <li><a href="#"><i class="fa-solid fa-gear"></i> Cài đặt trang</a></li>
             </ul>
         </aside>
 
@@ -77,7 +77,7 @@
         <main class="main-content">
             <!-- Header -->
             <header class="top-header">
-                <h2>Bảng điều khiển</h2>
+                <h2>Bảng Điều Khiển Fanclub</h2>
                 <div class="user-profile">
                     <div class="avatar" id="avatarText">A</div>
                     <span id="userDisplayName" style="font-weight: 600;">Admin</span>
@@ -89,69 +89,76 @@
 
             <!-- Body Content -->
             <div class="content-body">
-                <!-- Stat Cards -->
+                <!-- Stat Cards cho Fanclub -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
                         <div class="stat-info">
-                            <h3>1,250</h3>
-                            <p>Người dùng</p>
+                            <h3>12,850</h3>
+                            <p>Tổng thành viên FC</p>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon icon-success">
-                            <i class="fa-solid fa-dollar-sign"></i>
+                            <i class="fa-solid fa-calendar-check"></i>
                         </div>
                         <div class="stat-info">
-                            <h3>$12,450</h3>
-                            <p>Doanh thu tháng</p>
+                            <h3>156</h3>
+                            <p>Đăng ký Offline sắp tới</p>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon icon-warning">
-                            <i class="fa-solid fa-cart-shopping"></i>
+                            <i class="fa-solid fa-hand-holding-heart"></i>
                         </div>
                         <div class="stat-info">
-                            <h3>342</h3>
-                            <p>Đơn hàng mới</p>
+                            <h3>15,200,000đ</h3>
+                            <p>Quỹ hoạt động tháng</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Table Section -->
+                <!-- Table Section: Thành viên / Đăng ký mới -->
                 <div class="table-container">
-                    <h3>Hoạt động gần đây</h3>
+                    <h3>Thành viên đăng ký Offline Sinh nhật Doraemon</h3>
                     <table>
                         <thead>
                             <tr>
-                                <th>Mã HD</th>
-                                <th>Khách hàng</th>
-                                <th>Ngày giao dịch</th>
-                                <th>Số tiền</th>
-                                <th>Trạng thái</th>
+                                <th>Mã ĐK</th>
+                                <th>Tên thành viên</th>
+                                <th>Số điện thoại / Email</th>
+                                <th>Ngày đăng ký</th>
+                                <th>Trạng thái Vé</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>#INV-8831</td>
-                                <td>Nguyễn Văn A</td>
+                                <td>#OFF-001</td>
+                                <td>Nguyễn Minh Anh</td>
+                                <td>minhanh@gmail.com</td>
                                 <td>29/07/2026</td>
-                                <td>$250.00</td>
-                                <td><span class="badge badge-success">Hoàn thành</span></td>
+                                <td><span class="badge badge-success">Đã xác nhận</span></td>
                             </tr>
                             <tr>
-                                <td>#INV-8832</td>
-                                <td>Trần Thị B</td>
+                                <td>#OFF-002</td>
+                                <td>Trần Hoàng Long</td>
+                                <td>0908123xxx</td>
                                 <td>29/07/2026</td>
-                                <td>$120.00</td>
-                                <td><span class="badge badge-warning">Đang xử lý</span></td>
+                                <td><span class="badge badge-warning">Chờ duyệt</span></td>
                             </tr>
                             <tr>
-                                <td>#INV-8833</td>
-                                <td>Lê Văn C</td>
+                                <td>#OFF-003</td>
+                                <td>Lê Khánh Hà</td>
+                                <td>khanhha@gmail.com</td>
                                 <td>28/07/2026</td>
-                                <td>$540.00</td>
-                                <td><span class="badge badge-success">Hoàn thành</span></td>
+                                <td><span class="badge badge-success">Đã xác nhận</span></td>
+                            </tr>
+                            <tr>
+                                <td>#OFF-004</td>
+                                <td>Pham Quốc Bảo</td>
+                                <td>0912987xxx</td>
+                                <td>28/07/2026</td>
+                                <td><span class="badge badge-success">Đã xác nhận</span></td>
                             </tr>
                         </tbody>
                     </table>
