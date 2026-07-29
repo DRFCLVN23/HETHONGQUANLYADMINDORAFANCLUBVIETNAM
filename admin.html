@@ -1,25 +1,112 @@
-<script type="module">
-    // Kiểm tra Đăng nhập
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dora Admin 2.0</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f6f9; color: #333; display: flex; min-height: 100vh; }
+
+        .dashboard { display: flex; width: 100%; }
+        .sidebar { width: 260px; background: #1e293b; color: #fff; padding: 20px; display: flex; flex-direction: column; min-height: 100vh; transition: 0.3s; }
+        .brand { text-align: center; padding-bottom: 20px; border-bottom: 1px solid #334155; margin-bottom: 20px; }
+        .brand img { width: 60px; height: 60px; border-radius: 50%; }
+        .brand h3 { margin-top: 10px; font-size: 18px; color: #38bdf8; }
+        .brand span { font-size: 12px; color: #94a3b8; }
+        .sidebar nav { flex: 1; }
+        .sidebar nav a { display: block; padding: 12px 15px; color: #cbd5e1; text-decoration: none; border-radius: 8px; margin-bottom: 5px; font-size: 14px; transition: 0.2s; }
+        .sidebar nav a:hover, .sidebar nav a.active { background: #0284c7; color: #fff; }
+        
+        .user-info { padding-top: 15px; border-top: 1px solid #334155; font-size: 13px; }
+        .user-info .name { font-weight: bold; color: #f8fafc; }
+        .user-info .role { color: #38bdf8; margin-bottom: 10px; }
+        .user-info button { width: 100%; padding: 8px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+
+        .main-content { flex: 1; padding: 30px; overflow-y: auto; }
+        .page-header { margin-bottom: 25px; }
+        .card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 20px; }
+
+        input, select, textarea, button { font-size: 14px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; margin-bottom: 10px; width: 100%; outline: none; }
+        button.btn-primary { background: #0284c7; color: white; border: none; cursor: pointer; font-weight: bold; }
+        
+        .menu-toggle { display: none; position: fixed; top: 15px; right: 15px; z-index: 1000; background: #0284c7; color: white; border: none; padding: 10px 15px; border-radius: 6px; }
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 998; }
+
+        @media (max-width: 768px) {
+            .sidebar { position: fixed; left: -260px; z-index: 999; height: 100%; }
+            .sidebar.open { left: 0; }
+            .menu-toggle { display: block; }
+            .sidebar-overlay.open { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+<button class="menu-toggle" onclick="window.toggleMenu()">☰</button>
+<div class="sidebar-overlay" onclick="window.toggleMenu()"></div>
+
+<div class="dashboard">
+    <aside class="sidebar" id="sidebar">
+        <div class="brand">
+            <img src="https://i.postimg.cc/Z57X57Gp/Chua-co-ten-(Logo)-(1).png" alt="Logo" />
+            <h3>DORA ADMIN</h3>
+            <span>Hệ thống quản trị</span>
+        </div>
+        <nav>
+            <a href="#" data-page="home" class="active" onclick="window.showPage('home')">🏠 Trang chủ</a>
+            <a href="#" data-page="users" onclick="window.showPage('users')">👥 Thành viên</a>
+            <a href="#" data-page="notices" onclick="window.showPage('notices')">📢 Thông báo</a>
+            <a href="#" data-page="documents" onclick="window.showPage('documents')">📄 Văn bản</a>
+            <a href="#" data-page="tests" onclick="window.showPage('tests')">📝 Test kỹ năng</a>
+            <a href="#" data-page="feedback" onclick="window.showPage('feedback')">💬 Góp ý</a>
+            <a href="#" data-page="games" onclick="window.showPage('games')">🎮 Game</a>
+            <a href="#" data-page="settings" onclick="window.showPage('settings')">⚙️ Cài đặt</a>
+            <a href="#" data-page="profile" onclick="window.showPage('profile')">👤 Hồ sơ</a>
+        </nav>
+        <div class="user-info">
+            <div class="name" id="userName">...</div>
+            <div class="role" id="userRole">...</div>
+            <button onclick="window.logout()">🚪 Đăng xuất</button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h2 id="pageTitle">Trang chủ</h2>
+        </div>
+        <div id="pageContent"></div>
+    </main>
+</div>
+
+<script>
+    // Kiểm tra đăng nhập an toàn
     function checkAuth() {
-        const user = JSON.parse(localStorage.getItem("currentUser"));
-        if (!user) {
-            window.location.href = "index.html";
+        const userRaw = localStorage.getItem("currentUser");
+        if (!userRaw) {
+            // Chưa đăng nhập -> Chuyển về index.html chuẩn đường dẫn tương đối
+            window.location.replace("./index.html");
             return null;
         }
-        return user;
+        try {
+            return JSON.parse(userRaw);
+        } catch (e) {
+            localStorage.removeItem("currentUser");
+            window.location.replace("./index.html");
+            return null;
+        }
     }
 
     window.logout = function() {
         localStorage.removeItem("currentUser");
-        window.location.href = "index.html";
+        window.location.replace("./index.html");
     };
 
     window.toggleMenu = function() {
-        document.getElementById("sidebar")?.classList.toggle("open");
-        document.querySelector(".sidebar-overlay")?.classList.toggle("open");
+        document.getElementById("sidebar").classList.toggle("open");
+        document.querySelector(".sidebar-overlay").classList.toggle("open");
     };
 
-    // Hàm điều hướng Router có bắt lỗi (Catch Error)
     window.showPage = async function(pageId) {
         const user = checkAuth();
         if (!user) return;
@@ -39,34 +126,27 @@
         try {
             switch(pageId) {
                 case "home":
-                    content.innerHTML = `<div class="card"><h3>👋 Xin chào, ${user.name}!</h3><p>Hệ thống Dora Admin 2.0 đã sẵn sàng.</p></div>`;
+                    content.innerHTML = `<div class="card"><h3>👋 Xin chào, ${user.name}!</h3><p>Hệ thống Dora Admin 2.0 đã hoạt động ổn định.</p></div>`;
                     break;
-
                 case "users":
                     const { renderUsersPage } = await import('./js/users.js');
                     content.innerHTML = renderUsersPage(user);
                     break;
-
                 case "notices":
                     const { renderNoticesPage } = await import('./js/notices.js');
                     content.innerHTML = renderNoticesPage(user);
                     break;
-
                 default:
-                    content.innerHTML = `<div class="card"><h3>📌 Trang ${pageId}</h3><p>Đang chuẩn bị ở các giai đoạn sau...</p></div>`;
+                    content.innerHTML = `<div class="card"><h3>📌 Trang ${pageId}</h3><p>Trang này đang chờ nạp module từ js/${pageId}.js</p></div>`;
                     break;
             }
-        } catch (error) {
-            console.error("Lỗi nạp Module:", error);
-            content.innerHTML = `
-                <div class="card" style="border-left: 4px solid #ef4444;">
-                    <h3 style="color: #ef4444;">⚠️ Không thể tải dữ liệu trang này</h3>
-                    <p><b>Lý do:</b> Hãy đảm bảo bạn đã tạo file <code>js/${pageId}.js</code> hoặc đang chạy ứng dụng qua Server (Live Server / GitHub Pages) thay vì mở trực tiếp file html.</p>
-                </div>`;
+        } catch (err) {
+            console.error(err);
+            content.innerHTML = `<div class="card"><p style="color:red;">Chưa tìm thấy file <b>js/${pageId}.js</b> hoặc lỗi nạp module.</p></div>`;
         }
     };
 
-    // Khởi tạo hệ thống
+    // Khởi chạy
     const currentUser = checkAuth();
     if (currentUser) {
         document.getElementById("userName").innerText = currentUser.name;
@@ -74,3 +154,6 @@
         window.showPage("home");
     }
 </script>
+
+</body>
+</html>
