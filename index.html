@@ -17,6 +17,7 @@
     <div id="loginSection" class="login-wrapper">
         <div class="login-card">
             <div class="login-header">
+                <!-- Logo đã fix kích thước -->
                 <img src="https://i.postimg.cc/Z57X57Gp/Chua-co-ten-(Logo)-(1).png" alt="Logo Dora Fanclub" class="login-logo">
                 <h2>Admin Login</h2>
                 <p>Hệ thống Quản trị Dora Fanclub Việt Nam</p>
@@ -27,12 +28,12 @@
                 <span id="errorText">Tên đăng nhập hoặc mật khẩu không đúng!</span>
             </div>
 
-            <form id="loginForm" onsubmit="handleLogin(event)">
+            <form id="loginForm">
                 <div class="form-group">
-                    <label for="username">Tên tài khoản</label>
+                    <label for="username">Email Admin</label>
                     <div class="input-icon-wrapper">
-                        <i class="fa-solid fa-user"></i>
-                        <input type="text" id="username" class="form-control" placeholder="Nhập 'admin'" required autocomplete="off">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input type="email" id="username" class="form-control" placeholder="admin@dorafanclub.com" required autocomplete="off">
                     </div>
                 </div>
 
@@ -40,7 +41,7 @@
                     <label for="password">Mật khẩu</label>
                     <div class="input-icon-wrapper">
                         <i class="fa-solid fa-lock"></i>
-                        <input type="password" id="password" class="form-control" placeholder="Nhập 'admin123'" required>
+                        <input type="password" id="password" class="form-control" placeholder="••••••••" required>
                     </div>
                 </div>
 
@@ -50,7 +51,7 @@
             </form>
 
             <div class="security-note">
-                <i class="fa-solid fa-shield-halved"></i> Bảo mật Session Token & Auto Timeout
+                <i class="fa-solid fa-shield-halved"></i> Xác thực qua Firebase Authentication & SSL
             </div>
         </div>
     </div>
@@ -81,7 +82,7 @@
                 <div class="user-profile">
                     <div class="avatar" id="avatarText">A</div>
                     <span id="userDisplayName" style="font-weight: 600;">Admin</span>
-                    <button class="btn-logout" onclick="handleLogout()">
+                    <button class="btn-logout" id="btnLogout">
                         <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
                     </button>
                 </div>
@@ -94,7 +95,7 @@
                     <div class="stat-card">
                         <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
                         <div class="stat-info">
-                            <h3>12,850</h3>
+                            <h3 id="statMembers">12,850</h3>
                             <p>Tổng thành viên FC</p>
                         </div>
                     </div>
@@ -103,7 +104,7 @@
                             <i class="fa-solid fa-calendar-check"></i>
                         </div>
                         <div class="stat-info">
-                            <h3>156</h3>
+                            <h3 id="statEvents">156</h3>
                             <p>Đăng ký Offline sắp tới</p>
                         </div>
                     </div>
@@ -112,7 +113,7 @@
                             <i class="fa-solid fa-hand-holding-heart"></i>
                         </div>
                         <div class="stat-info">
-                            <h3>15,200,000đ</h3>
+                            <h3 id="statFund">15,200,000đ</h3>
                             <p>Quỹ hoạt động tháng</p>
                         </div>
                     </div>
@@ -155,7 +156,7 @@
                             </tr>
                             <tr>
                                 <td>#OFF-004</td>
-                                <td>Pham Quốc Bảo</td>
+                                <td>Phạm Quốc Bảo</td>
                                 <td>0912987xxx</td>
                                 <td>28/07/2026</td>
                                 <td><span class="badge badge-success">Đã xác nhận</span></td>
@@ -167,7 +168,7 @@
         </main>
     </div>
 
-    <!-- File Script JS -->
-    <script src="script.js"></script>
+    <!-- Import Script JS dưới dạng ES Module để tích hợp Firebase SDK -->
+    <script type="module" src="script.js"></script>
 </body>
 </html>
